@@ -96,6 +96,9 @@
                 Volver
             </button>
         </div>
+        <button onclick="goBackToStart()" class="mt-8 bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600 transition duration-300">
+            Regresar al Inicio
+        </button>
     </div>
 
 </div>
@@ -257,6 +260,11 @@
     function hideContent() {
         contentViewer.classList.add('hidden');
         sectionsGrid.classList.remove('hidden');
+    }
+
+    function goBackToStart() {
+        mainContent.classList.add('hidden');
+        welcomeScreen.classList.remove('hidden');
     }
 </script>
 
