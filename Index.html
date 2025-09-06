@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramienta Interactiva PEP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+        }
+        .text-ces-blue {
+            color: #004380; /* Azul oscuro de la universidad */
+        }
+        .bg-ces-blue-dark {
+            background-color: #15284b; /* Azul de la universidad (RGB 21-40-75) */
+        }
+        .bg-ces-teal {
+            background-color: #008781; /* Verde azulado de la universidad */
+        }
+        .bg-card-1 { background-color: #004380; } /* Azul de la universidad para contraste */
+        .bg-card-2 { background-color: #92e6e3; } /* Verde azulado claro */
+        .bg-card-3 { background-color: #ff9180; } /* Naranja suave */
+        .bg-card-4 { background-color: #c9e9b3; } /* Verde claro */
+        .bg-card-5 { background-color: #ffe680; } /* Amarillo suave */
+        .bg-card-6 { background-color: #d1b2ff; } /* Púrpura suave */
+
+        .rounded-lg {
+            border-radius: 0.5rem;
+        }
+        .container {
+            max-width: 90%;
+            margin: auto;
+            padding: 2rem;
+        }
+        .card {
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-f0f4f8">
+
+<div id="app" class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Pantalla de Bienvenida -->
+    <div id="welcome-screen" class="w-full min-h-screen flex flex-col items-center justify-center text-center text-white fade-in bg-ces-blue-dark">
+        <div class="container flex flex-col items-center justify-center">
+            <!-- Logo de la Universidad CES en la parte superior -->
+            <img src="https://www.ces.edu.co/content/themes/theme-ces/dist/images/Universidad-CES-blanco.svg" alt="Universidad CES Logo" class="mb-6 w-48 sm:w-64 mt-4">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white mt-12">Proyecto Educativo del Programa (PEP)</h1>
+            <p class="mt-4 text-xl sm:text-2xl font-light text-gray-200">
+                Descubre los pilares de nuestro programa de Maestría en Administración en Salud.
+            </p>
+            <button id="start-btn" class="mt-8 bg-ces-teal text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
+                Comenzar
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div id="main-content" class="container hidden bg-ces-blue-dark rounded-2xl shadow-xl flex flex-col items-center justify-center py-8">
+        <img src="https://www.ces.edu.co/content/themes/theme-ces/dist/images/Universidad-CES-blanco.svg" alt="Universidad CES Logo" class="w-40 sm:w-56 mb-8">
+        <div id="sections-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 p-8 fade-in">
+            <!-- Cards de Secciones -->
+        </div>
+
+        <!-- Visor de Contenido -->
+        <div id="content-viewer" class="bg-white p-6 md:p-10 rounded-2xl shadow-xl hidden fade-in">
+            <h2 id="content-title" class="text-3xl font-bold mb-4 text-ces-blue"></h2>
+            <div id="content-text" class="prose max-w-none text-gray-700"></div>
+            <button onclick="hideContent()" class="mt-8 bg-ces-teal text-white font-bold py-2 px-6 rounded-full hover:bg-ces-blue transition duration-300">
+                Volver
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Definiciones del PEP
+    const definitions = {
+        "Definiciones Clave": {
+            title: "Definiciones Clave del PEP",
+            content: `
+                <p>El <strong>Proyecto Educativo del Programa (PEP)</strong> es la carta de navegación de la Maestría en Administración en Salud. Articula la Misión, el Proyecto Educativo Institucional (PEI) y el Plan Estratégico de Desarrollo de la Universidad CES para formar profesionales competentes en el sector salud.</p>
+                <p>La <strong>Administración en Salud</strong> es la aplicación de la teoría y el método científico de la administración de empresas al sector salud. Se enfoca en la planificación, organización, dirección y control de las empresas de salud para optimizar recursos, procesos y personas.</p>
+                <p>El <strong>Modelo Pedagógico</strong> de la Universidad CES se basa en el constructivismo. Se promueve el <strong>Aprender a Aprender</strong>, el <strong>Aprender Integralmente</strong> y el <strong>Aprender Haciendo</strong>, con el docente actuando como mediador y no solo como transmisor de conocimiento.</p>
+            `,
+            image: "https://placehold.co/400x300/e0f2f1/004d40?text=Conceptos+Clave",
+            icon: `<i class="fa-solid fa-graduation-cap text-4xl text-white mb-4"></i>`,
+            color: 'bg-card-1',
+            textColor: 'text-white'
+        },
+        "Misión y Visión": {
+            title: "Misión y Visión del Programa",
+            content: `
+                <p><strong>Misión:</strong> Formar líderes administrativos destacados con competencias, visión estratégica, pensamiento crítico y un alto sentido ético. El objetivo es que transformen los desafíos del sector en oportunidades, contribuyendo a la mejora de la salud a nivel individual y poblacional.</p>
+                <p><strong>Visión:</strong> Ser reconocido a nivel nacional y regional por la calidad excepcional del talento humano que forma. Esto se logra a través de un enfoque curricular flexible que permite a los egresados aplicar sus conocimientos, habilidades y actitudes en beneficio de la sociedad y de las organizaciones dentro del sistema de salud.</p>
+            `,
+            image: "https://placehold.co/400x300/cfd8dc/263238?text=Misión+y+Visión",
+            icon: `<i class="fa-solid fa-compass text-4xl text-white mb-4"></i>`,
+            color: 'bg-card-2',
+            textColor: 'text-white'
+        },
+        "Perfiles": {
+            title: "Perfiles de Ingreso, Egreso y Profesional",
+            content: `
+                <h3 class="text-2xl font-semibold mt-6 mb-2 text-ces-teal">Perfil de Ingreso</h3>
+                <p>El programa está dirigido a profesionales de diversas ramas del conocimiento, como las de la salud, administración, ciencias sociales y humanas. Se buscan aspirantes con actitudes, aptitudes e interés en la administración en salud. El proceso de admisión incluye una entrevista cualitativa para verificar el interés y la afinidad del aspirante con el componente administrativo y gerencial del programa.</p>
+
+                <h3 class="text-2xl font-semibold mt-6 mb-2 text-ces-teal">Perfil de Egreso</h3>
+                <p>El egresado de la maestría en Administración en Salud es un profesional con:</p>
+                <ul class="list-disc list-inside space-y-2 mt-4">
+                    <li><strong>Habilidades investigativas, cognitivas, contextuales y valorativas:</strong> para concebir, formular, ejecutar y evaluar estrategias empresariales en instituciones del sector salud.</li>
+                    <li><strong>Capacidad de liderazgo y administración:</strong> para liderar procesos y proyectos que mejoren la productividad, competitividad y sostenibilidad de las organizaciones.</li>
+                    <li><strong>Conciencia de responsabilidad social:</strong> reconoce la importancia de manejar ética y eficazmente los recursos financieros del sistema de seguridad social.</li>
+                </ul>
+
+                <h3 class="text-2xl font-semibold mt-6 mb-2 text-ces-teal">Perfil Profesional</h3>
+                <p>El magíster en Administración en Salud estará en capacidad de desempeñarse como:</p>
+                <ul class="list-disc list-inside space-y-2 mt-4">
+                    <li><strong>Gerente o Director:</strong> para dirigir y administrar eficientemente empresas del sistema de salud.</li>
+                    <li><strong>Gerente, Director o Administrador de equipos:</strong> para garantizar la productividad, el mejoramiento competitivo y la perdurabilidad.</li>
+                    <li><strong>Estratega:</strong> para diseñar y coordinar procesos de reflexión estratégica.</li>
+                    <li><strong>Asesor:</strong> para aconsejar y orientar procesos de transformación.</li>
+                    <li><strong>Investigador:</strong> para promover y desarrollar proyectos de investigación aplicada a los problemas del sector.</li>
+                </ul>
+            `,
+            image: "https://placehold.co/400x300/a7ffeb/004d40?text=Perfiles",
+            icon: `<i class="fa-solid fa-user-tie text-4xl text-white mb-4"></i>`,
+            color: 'bg-card-3',
+            textColor: 'text-white'
+        },
+        "Estructura Curricular": {
+            title: "Estructura Curricular y Plan de Estudios",
+            content: `
+                <p>La maestría se estructura en tres periodos académicos, con un total de <strong>41 créditos</strong>. Las asignaturas se dividen en cuatro áreas curriculares:</p>
+                <ul class="list-disc list-inside space-y-2 mt-4">
+                    <li><strong>Fundamentos Administración y Gerencia (43.9%):</strong> Se enfoca en la misión de la administración en salud y proporciona herramientas clave para la gestión.</li>
+                    <li><strong>Estudio del Sector Salud (14.6%):</strong> Aquí se adquieren conocimientos estratégicos para analizar críticamente los requisitos y riesgos del sector.</li>
+                    <li><strong>Investigación (31.7%):</strong> Desarrolla competencias investigativas para abordar problemas específicos, formulando, diseñando e implementando proyectos.</li>
+                    <li><strong>Socio Humanística (9.7%):</strong> Orientada a formar un administrador íntegro con valores éticos y habilidades humanísticas.</li>
+                </ul>
+                <p class="mt-4">El programa fomenta la <strong>flexibilidad curricular</strong> sin prerrequisitos ni correquisitos, permitiendo a los estudiantes adaptar su formación a sus necesidades.</p>
+            `,
+            image: "https://placehold.co/400x300/80cbc4/004d40?text=Curriculum",
+            icon: `<i class="fa-solid fa-gears text-4xl text-white mb-4"></i>`,
+            color: 'bg-card-4',
+            textColor: 'text-white'
+        },
+        "Evaluación y Acompañamiento": {
+            title: "Evaluación y Acompañamiento",
+            content: `
+                <p>La evaluación se concibe como un proceso continuo y formativo que valora el aprendizaje en términos de actitudes, aptitudes, conocimientos y destrezas. Se utilizan diferentes tipos de evaluación:</p>
+                <ul class="list-disc list-inside space-y-2 mt-4">
+                    <li><strong>Evaluación Diagnóstica:</strong> Identifica conocimientos previos.</li>
+                    <li><strong>Evaluación Formativa:</strong> Retroalimenta el proceso de aprendizaje.</li>
+                    <li><strong>Evaluación Sumativa:</strong> Valora los aprendizajes alcanzados.</li>
+                </ul>
+                <p class="mt-4">El <strong>Comité de Promociones</strong> se encarga de dar seguimiento al rendimiento académico de los estudiantes, proponiendo planes de mejora cuando sea necesario.</p>
+            `,
+            image: "https://placehold.co/400x300/4db6ac/004d40?text=Evaluación",
+            icon: `<i class="fa-solid fa-chart-line text-4xl text-white mb-4"></i>`,
+            color: 'bg-card-5',
+            textColor: 'text-white'
+        },
+        "Internacionalización": {
+            title: "Internacionalización",
+            content: `
+                <p>El programa promueve la internacionalización como un proceso integral. Las principales acciones incluyen:</p>
+                <ul class="list-disc list-inside space-y-2 mt-4">
+                    <li><strong>Movilidad académica:</strong> Pasantías, intercambios y asistencia a eventos nacionales e internacionales.</li>
+                    <li><strong>Internacionalización del currículo en el aula:</strong> Clases espejo con otras universidades, invitados internacionales y revisión de la bibliografía con enfoques globales.</li>
+                    <li><strong>Actividades de investigación conjuntas</strong> con otras instituciones.</li>
+                </ul>
+            `,
+            image: "https://placehold.co/400x300/26a69a/004d40?text=Internacionalización",
+            icon: `<i class="fa-solid fa-globe text-4xl text-white mb-4"></i>`,
+            color: 'bg-card-6',
+            textColor: 'text-white'
+        },
+    };
+
+    const sections = [
+        "Definiciones Clave",
+        "Misión y Visión",
+        "Perfiles",
+        "Estructura Curricular",
+        "Evaluación y Acompañamiento",
+        "Internacionalización"
+    ];
+
+    const app = document.getElementById('app');
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const startBtn = document.getElementById('start-btn');
+    const mainContent = document.getElementById('main-content');
+    const sectionsGrid = document.getElementById('sections-grid');
+    const contentViewer = document.getElementById('content-viewer');
+    const contentTitle = document.getElementById('content-title');
+    const contentText = document.getElementById('content-text');
+
+    startBtn.addEventListener('click', () => {
+        welcomeScreen.classList.add('hidden');
+        mainContent.classList.remove('hidden');
+        renderSections();
+    });
+
+    function renderSections() {
+        sectionsGrid.innerHTML = '';
+        sections.forEach(section => {
+            const data = definitions[section];
+            const card = document.createElement('div');
+            card.className = `card ${data.color} p-6 rounded-2xl shadow-lg cursor-pointer flex flex-col items-center text-center slide-in`;
+            card.innerHTML = `
+                <div class="text-3xl mb-4 ${data.textColor}">
+                    ${data.icon}
+                </div>
+                <h3 class="text-xl font-bold ${data.textColor}">${section}</h3>
+            `;
+            card.onclick = () => showContent(section);
+            sectionsGrid.appendChild(card);
+        });
+    }
+
+    function showContent(sectionName) {
+        const content = definitions[sectionName];
+        contentTitle.textContent = content.title;
+        contentText.innerHTML = content.content;
+        sectionsGrid.classList.add('hidden');
+        contentViewer.classList.remove('hidden');
+    }
+
+    function hideContent() {
+        contentViewer.classList.add('hidden');
+        sectionsGrid.classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
+
