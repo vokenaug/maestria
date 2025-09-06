@@ -1,0 +1,635 @@
+import { useState } from 'react';
+
+// URL del logotipo de la universidad
+const logoUrl = "https://www.ces.edu.co/content/themes/theme-ces/dist/images/Universidad-CES.svg";
+
+// Datos de los factores del informe de autoevaluación
+const factores = [
+  {
+    id: 1,
+    title: 'Factor 1: Proyecto Educativo del Programa e Identidad Institucional',
+    calificacion: 4.79,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 19V9l8-6 8 6v10" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18V9" />
+      </svg>
+    ),
+    descripcion: 'Un programa de alta calidad se reconoce por sus referentes filosóficos, pedagógicos y organizacionales, expuestos en el proyecto educativo, que son coherentes con la identidad institucional.',
+    detalles: [
+      {
+        subTitle: 'Característica 1: Proyecto Educativo del Programa',
+        calificacion: 4.80,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La comunidad académica valora la alta coherencia entre el PEP y el PEI, con un promedio de 4.6. El compromiso con la excelencia en las funciones misionales es percibido con una calificación de 4.92, y la orientación de las decisiones académicas y administrativas se evalúa en 4.73. El comité de autoevaluación destaca el cumplimiento pleno y la alineación del programa con los principios y propósitos institucionales.',
+      },
+      {
+        subTitle: 'Característica 2: Relevancia académica y pertinencia social',
+        calificacion: 4.78,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa contribuye al fortalecimiento del sistema de salud colombiano. La percepción sobre la pertinencia social es alta (promedio 4.82), especialmente por parte de los empleadores (5.0). La calidad del programa en comparación con otros similares es muy valorada (4.84), aunque los docentes lo califican ligeramente más bajo (4.6).',
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Factor 2: Estudiantes',
+    calificacion: 4.66,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-6.627 0-12 5.373-12 12h24c0-6.627-5.373-12-12-12z" />
+      </svg>
+    ),
+    descripcion: 'Un programa de alta calidad permite a los estudiantes desarrollar actitudes, capacidades, habilidades y conocimientos durante su proceso de formación.',
+    detalles: [
+      {
+        subTitle: 'Característica 3: Participación en actividades de formación integral',
+        calificacion: 4.73,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa promueve la formación integral, con una participación significativa de estudiantes en actividades de Bienestar Institucional. La percepción general sobre la posibilidad de un aprendizaje integral es positiva (promedio 4.6). El comité destaca la efectividad del programa en ofrecer un aprendizaje integral, aunque señala la necesidad de una mayor inclusión de la retroalimentación de egresados y empleadores.',
+      },
+      {
+        subTitle: 'Característica 4: Orientación y seguimiento a estudiantes',
+        calificacion: 4.75,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa cuenta con estrategias efectivas de orientación y seguimiento, como el Comité de Promociones, el cual evalúa el progreso de los estudiantes y propone planes de mejora. El comité de autoevaluación destaca el proceso formal de orientación y seguimiento, pero sugiere incorporar un enfoque más integral en el seguimiento, especialmente en la salud mental de los estudiantes, docentes y personal administrativo.',
+      },
+      {
+        subTitle: 'Característica 5: Capacidad de trabajo autónomo',
+        calificacion: 4.68,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa es muy efectivo en fomentar el trabajo autónomo, con una valoración excelente por parte de directivos y estudiantes (4.8). Los docentes también lo valoran positivamente (4.5). Los egresados califican con 4.9 el impacto del currículo en el desarrollo de competencias para el trabajo autónomo.',
+      },
+      {
+        subTitle: 'Característica 6: Reglamento estudiantil y política académica',
+        calificacion: 4.63,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El reglamento estudiantil es percibido como pertinente, vigente y de aplicación transparente. Sin embargo, las calificaciones más bajas en vigencia (4.2 por parte de docentes) y divulgación (4.2 por estudiantes) sugieren la necesidad de una actualización más constante y una mejora en las estrategias de comunicación.',
+      },
+      {
+        subTitle: 'Característica 7: Estímulos y apoyos para estudiantes',
+        calificacion: 4.51,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa cuenta con un amplio sistema de apoyos y estímulos, regulado por el Reglamento de Bienestar Institucional. Se ha observado un incremento notable en la cantidad y el valor de los apoyos. Sin embargo, el comité reitera la necesidad de fortalecer los canales de comunicación para los estudiantes de posgrado.',
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Factor 3: Profesores',
+    calificacion: 4.65,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a.5.5 0 00-.518-.87L12 10.5V14z" />
+      </svg>
+    ),
+    descripcion: 'La alta calidad de un programa académico se evidencia en el nivel, la dedicación, la vinculación, la calidad y la pertinencia de sus profesores.',
+    detalles: [
+      {
+        subTitle: 'Característica 8: Selección, vinculación y permanencia',
+        calificacion: 4.66,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'Los docentes y directivos tienen una percepción muy positiva sobre las normas y criterios para la selección, vinculación y permanencia de profesores, con calificaciones superiores a 4.5. El comité destaca que el programa cuenta con docentes de reconocida trayectoria y experiencia en el sector salud.',
+      },
+      {
+        subTitle: 'Característica 9: Estatuto profesoral',
+        calificacion: 4.53,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El estatuto profesoral, que rige los derechos y deberes de los docentes, es valorado positivamente por directivos y docentes. El comité resalta la importancia del escalafón docente y la alta calidad del desarrollo profesoral que promueve la universidad.',
+      },
+      {
+        subTitle: 'Característica 10: Número, dedicación, nivel de formación y experiencia',
+        calificacion: 4.77,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La percepción sobre la suficiencia del número de profesores es muy positiva, con una razón de 3 estudiantes por docente. Los estudiantes y egresados valoran altamente la calidad académica de los profesores (4.7 y 4.9 respectivamente).',
+      },
+      {
+        subTitle: 'Característica 11: Desarrollo profesoral',
+        calificacion: 4.52,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa de desarrollo docente es altamente valorado, con una percepción excelente en su diversidad, acceso, cobertura y pertinencia. Los directivos y docentes lo califican con un promedio de 4.8.',
+      },
+      {
+        subTitle: 'Característica 12: Estímulos a la trayectoria profesoral',
+        calificacion: 4.56,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El otorgamiento de estímulos y reconocimientos a la trayectoria profesoral recibe una percepción positiva, con calificaciones superiores a 4.4. El comité considera que estos estímulos mantienen a los profesionales motivados.',
+      },
+      {
+        subTitle: 'Característica 13: Producción, pertinencia y uso de material docente',
+        calificacion: 4.63,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La percepción sobre la calidad del material académico es positiva, con calificaciones de 5.0 por parte de los directivos y 4.5 por los estudiantes. El 95% de las asignaturas cuentan con aulas virtuales de apoyo, lo que facilita la interacción y el desarrollo de habilidades tecnológicas.',
+      },
+      {
+        subTitle: 'Característica 14: Remuneración por méritos',
+        calificacion: 4.94,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La correspondencia entre los méritos y la remuneración económica recibe una calificación promedio de 4.7. El comité valora que la universidad promueve una remuneración adecuada y reconoce los méritos de los docentes.',
+      },
+      {
+        subTitle: 'Característica 15: Evaluación de profesores',
+        calificacion: 4.60,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El proceso de evaluación docente es considerado excelente, con calificaciones de 4.8 por estudiantes, 4.8 por jefes de programa y 4.9 por los propios docentes. El comité destaca que el programa brinda retroalimentación permanente para generar acciones de mejora eficientes.',
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Factor 4: Egresados',
+    calificacion: 4.58,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15.75c-2.613 0-5.124-.411-7.5-.992M21 13.255A23.931 23.931 0 0112 15.75c-2.613 0-5.124-.411-7.5-.992" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 7.5l-7.5 7.5-7.5-7.5" />
+      </svg>
+    ),
+    descripcion: 'Un programa académico se reconoce por el desempeño de sus egresados y el impacto que tienen en el proyecto académico y en los procesos de desarrollo social, cultural, científico, tecnológico o económico.',
+    detalles: [
+      {
+        subTitle: 'Característica 16: Seguimiento de los egresados',
+        calificacion: 4.47,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'La universidad ha consolidado una política para egresados que incluye estudios de impacto para monitorear el desarrollo profesional y laboral. La empleabilidad de los egresados de la Maestría en Administración en Salud fue del 92% en 2024. Los empleadores valoran altamente el perfil de egreso (4.8), pero hay oportunidades de mejora en la aplicación de conocimientos y la capacidad para investigar e innovar (4.2).',
+      },
+      {
+        subTitle: 'Característica 17: Impacto de los egresados en el medio social y académico',
+        calificacion: 4.70,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'El 90% de los egresados ha participado en proyectos de transformación social. Los egresados perciben ventajas competitivas por su formación en la Universidad CES. El comité destaca el alto impacto de los egresados en la sociedad y la transferencia de competencias en sus áreas de aplicación.',
+      },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Factor 5: Aspectos académicos y resultados de aprendizaje',
+    calificacion: 4.64,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.25a.75.75 0 01.75.75v12a.75.75 0 01-1.5 0V7a.75.75 0 01.75-.75z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.25a.75.75 0 01.75.75v12a.75.75 0 01-1.5 0V7a.75.75 0 01.75-.75z" />
+        <path d="M19.5 21a.75.75 0 00.75-.75V8.25a.75.75 0 00-.75-.75H4.5a.75.75 0 00-.75.75V20.25a.75.75 0 00.75.75h15z" />
+        <path d="M12 2.25a.75.75 0 01.75.75v12.559L8.74 12.046a.75.75 0 00-1.06 1.06l4.25 4.25a.75.75 0 001.06 0l4.25-4.25a.75.75 0 00-1.06-1.06l-2.459 2.459V3a.75.75 0 00-.75-.75z" />
+      </svg>
+    ),
+    descripcion: 'El programa académico se basa en la innovación y define referentes que lo hacen parte de la comunidad académica nacional e internacional.',
+    detalles: [
+      {
+        subTitle: 'Característica 18: Integralidad de los aspectos curriculares',
+        calificacion: 4.78,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El currículo del programa está integrado por áreas disciplinares, sociohumanísticas y de investigación. La percepción sobre la posibilidad de un aprendizaje integral es muy positiva (promedio 4.7).',
+      },
+      {
+        subTitle: 'Característica 19: Flexibilidad de los aspectos curriculares',
+        calificacion: 4.39,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'Se valoran positivamente las rutas de formación personalizada (promedio 4.6). El comité de autoevaluación considera que la calificación de 4.39 invita a mejorar la comunicación sobre la flexibilidad del programa y la oferta de asignaturas electivas.',
+      },
+      {
+        subTitle: 'Característica 20: Interdisciplinariedad',
+        calificacion: 4.62,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La interdisciplinariedad es percibida positivamente (promedio 4.6). El programa integra a las Facultades de Administración y Medicina, ofreciendo una visión global del sector salud. El comité destaca la integración de múltiples disciplinas en los contenidos y el profesorado.',
+      },
+      {
+        subTitle: 'Característica 21: Estrategias pedagógicas',
+        calificacion: 4.63,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La efectividad de las estrategias pedagógicas es percibida positivamente (promedio 4.6). El comité considera que la calificación de 4.63 refleja la efectividad del programa en la implementación de estrategias pedagógicas que preparan a los estudiantes para resolver problemas reales.',
+      },
+      {
+        subTitle: 'Característica 22: Sistema de evaluación de estudiantes',
+        calificacion: 4.63,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La efectividad de los mecanismos de evaluación es percibida positivamente (promedio 4.6). El comité considera que el sistema de evaluación es justo y contribuye al proceso educativo, permitiendo una medición precisa y consistente del rendimiento estudiantil.',
+      },
+      {
+        subTitle: 'Característica 23: Resultados de aprendizaje',
+        calificacion: 4.81,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La eficacia del programa en términos de los logros educativos de los estudiantes es muy alta. La calificación global de 4.8 destaca que los resultados de aprendizaje esperados están claramente definidos y contribuyen al desarrollo profesional de los estudiantes.',
+      },
+      {
+        subTitle: 'Característica 24: Competencias',
+        calificacion: 4.74,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La alta calificación de 4.7 destaca la capacidad del programa para desarrollar las habilidades y conocimientos necesarios para que los estudiantes se desempeñen eficazmente en el ámbito de la administración en salud. El currículo es efectivo en varios aspectos clave, incluyendo el trabajo autónomo y las estrategias pedagógicas.',
+      },
+      {
+        subTitle: 'Característica 25: Evaluación y autorregulación del programa académico',
+        calificacion: 4.72,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa cuenta con un proceso de autoevaluación anual y se toman insumos de las evaluaciones a docentes y asignaturas. La calificación de 4.7 indica una percepción positiva sobre la efectividad de los mecanismos establecidos para la evaluación continua y la autorregulación.',
+      },
+      {
+        subTitle: 'Característica 26: Vinculación e interacción social',
+        calificacion: 4.50,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa promueve la participación en actividades de proyección social, como brigadas de salud. El 90% de los egresados reportan haber participado en proyectos de transformación social. La calificación de 4.5 refleja una percepción positiva sobre la interacción del programa con la comunidad y otros actores externos.',
+      },
+    ],
+  },
+  {
+    id: 6,
+    title: 'Factor 6: Permanencia y graduación',
+    calificacion: 4.72,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    descripcion: 'El programa desarrolla programas y acciones para promover la permanencia y graduación de los estudiantes.',
+    detalles: [
+      {
+        subTitle: 'Característica 27: Políticas, estrategias y estructura para la permanencia y la graduación',
+        calificacion: 4.68,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa cuenta con políticas y estructuras sólidas, como el Comité de Promociones y el programa Permaneces, que garantizan la continuidad de los estudios. La tasa de retención es cercana al 100% y la tasa de deserción es muy baja.',
+      },
+      {
+        subTitle: 'Característica 28: Caracterización de estudiantes y sistema de alertas tempranas',
+        calificacion: 4.69,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa caracteriza a los estudiantes desde el proceso de admisión y utiliza el Comité de Promociones para detectar alertas tempranas. El acompañamiento recibido por los estudiantes tiene una calificación de 4.7, lo que refleja la efectividad de las políticas institucionales.',
+      },
+      {
+        subTitle: 'Característica 29: Ajustes a los aspectos curriculares',
+        calificacion: 4.75,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El Comité de Currículo revisa y ajusta permanentemente la estructura curricular para mejorar la permanencia y graduación. El comité de autoevaluación otorga una calificación de 4.7 a esta característica.',
+      },
+      {
+        subTitle: 'Característica 30: Mecanismos de selección',
+        calificacion: 4.75,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El proceso de selección de estudiantes es riguroso y efectivo, con un índice de selectividad y absorción promedio del 96% y 87% respectivamente. La alta calificación de 4.75 sugiere que el programa ha establecido procedimientos sólidos para seleccionar a los estudiantes.',
+      },
+    ],
+  },
+  {
+    id: 7,
+    title: 'Factor 7: Interacción con el entorno nacional e internacional',
+    calificacion: 4.30,
+    cumplimiento: 'Se cumple en alto grado',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10a9 9 0 1118 0 9 9 0 01-18 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21a9 9 0 009-9H3a9 9 0 009 9z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12a9 9 0 019-9H3a9 9 0 019 9z" />
+      </svg>
+    ),
+    descripcion: 'El programa fortalece procesos de cooperación con otras comunidades, nacionales y extranjeras, para el desarrollo de labores formativas, académicas y científicas.',
+    detalles: [
+      {
+        subTitle: 'Característica 31: Inserción del programa en contextos académicos nacionales e internacionales',
+        calificacion: 4.42,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'El programa cuenta con convenios y actividades de movilidad que promueven la internacionalización del currículo. La colaboración con otras universidades en asignaturas y pasantías refleja la búsqueda de enriquecimiento y diversidad en la enseñanza.',
+      },
+      {
+        subTitle: 'Característica 32: Relaciones externas de profesores y estudiantes',
+        calificacion: 4.10,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'La percepción sobre las oportunidades de participación e interacción con otras comunidades es positiva (promedio 4.4). Sin embargo, el comité de autoevaluación considera que se requieren nuevas estrategias para lograr un impacto mayor.',
+      },
+      {
+        subTitle: 'Característica 33: Habilidades comunicativas en una segunda lengua',
+        calificacion: 4.40,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'El programa propicia en estudiantes y docentes habilidades comunicativas en una segunda lengua a través de clubes de revistas y bibliografía en inglés. El comité valora positivamente esta característica con una calificación de 4.4.',
+      },
+    ],
+  },
+  {
+    id: 8,
+    title: 'Factor 8: Aportes de la investigación, la innovación, el desarrollo tecnológico y la creación',
+    calificacion: 4.58,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
+    descripcion: 'El programa contribuye a la formación de un espíritu investigativo, creativo e innovador que favorece en el estudiante la identificación y formulación de problemas.',
+    detalles: [
+      {
+        subTitle: 'Característica 34: Formación para la investigación, el desarrollo tecnológico, la innovación y la creación',
+        calificacion: 4.58,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa fundamenta en los estudiantes la investigación, la innovación y la creación. El total de trabajos de investigación realizados por los estudiantes alcanzó los 58 entre 2019 y 2023. La percepción sobre la contribución del programa al desarrollo de capacidades investigativas es muy alta (4.8).',
+      },
+      {
+        subTitle: 'Característica 35: Compromiso con la investigación, el desarrollo tecnológico, la innovación y la creación',
+        calificacion: 4.58,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La universidad cuenta con un reglamento de propiedad intelectual. Los docentes que apoyan el programa pertenecen a grupos de investigación de alta calidad. El fuerte vínculo de la universidad con la investigación se refleja en una producción significativa de productos (476 en cinco años).',
+      },
+    ],
+  },
+  {
+    id: 9,
+    title: 'Factor 9: Bienestar de la comunidad académica del programa',
+    calificacion: 4.33,
+    cumplimiento: 'Se cumple en alto grado',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+    descripcion: 'El programa cuenta con programas de bienestar institucional pertinentes y adecuados a las necesidades de su comunidad académica.',
+    detalles: [
+      {
+        subTitle: 'Característica 36: Programas y servicios',
+        calificacion: 4.21,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'El reglamento de Bienestar Institucional busca favorecer el clima y la convivencia a través de siete líneas estratégicas y una amplia oferta de programas. La calidad de los servicios es muy valorada, aunque la cobertura y el uso podrían mejorar. El comité de autoevaluación asigna una calificación de 4.2.',
+      },
+      {
+        subTitle: 'Característica 37: Participación y seguimiento',
+        calificacion: 4.46,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'La participación de estudiantes y docentes en actividades de Bienestar Institucional varía significativamente. El comité asigna una calificación de 4.4, destacando la importancia de promover una mayor participación y diversidad de actividades.',
+      },
+    ],
+  },
+  {
+    id: 10,
+    title: 'Factor 10: Medios educativos y ambientes de aprendizaje',
+    calificacion: 4.57,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.25a.75.75 0 01.75.75v12a.75.75 0 01-1.5 0V7a.75.75 0 01.75-.75z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.25a.75.75 0 01.75.75v12a.75.75 0 01-1.5 0V7a.75.75 0 01.75-.75z" />
+        <path d="M19.5 21a.75.75 0 00.75-.75V8.25a.75.75 0 00-.75-.75H4.5a.75.75 0 00-.75.75V20.25a.75.75 0 00.75.75h15z" />
+        <path d="M12 2.25a.75.75 0 01.75.75v12.559L8.74 12.046a.75.75 0 00-1.06 1.06l4.25 4.25a.75.75 0 001.06 0l4.25-4.25a.75.75 0 00-1.06-1.06l-2.459 2.459V3a.75.75 0 00-.75-.75z" />
+      </svg>
+    ),
+    descripcion: 'El programa asegura la disponibilidad y el uso de medios educativos que permitan la creación de ambientes de aprendizaje coherentes con los resultados esperados.',
+    detalles: [
+      {
+        subTitle: 'Característica 38: Estrategias y recursos de apoyo a profesores',
+        calificacion: 4.50,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'Los docentes cuentan con diversas estrategias y recursos de apoyo, como aulas virtuales, laboratorios y videoconferencias. La percepción sobre la capacidad de estas estrategias para facilitar las habilidades comunicativas de los estudiantes es muy positiva (4.8).',
+      },
+      {
+        subTitle: 'Característica 39: Estrategias y recursos de apoyo a estudiantes',
+        calificacion: 4.58,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa cuenta con laboratorios, el Centro de Simulación y recursos informáticos que apoyan el aprendizaje de los estudiantes. La percepción de los recursos informáticos y de comunicación es muy positiva (4.6), indicando una infraestructura sólida y eficaz.',
+      },
+      {
+        subTitle: 'Característica 40: Recursos bibliográficos y de información',
+        calificacion: 4.63,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La Biblioteca Fundadores ofrece una amplia dotación de recursos electrónicos y físicos, con una inversión creciente. El uso de estos recursos es constante y la percepción de su pertinencia y suficiencia es positiva (promedio 4.6).',
+      },
+    ],
+  },
+  {
+    id: 11,
+    title: 'Factor 11: Organización, administración y financiación del programa académico',
+    calificacion: 4.83,
+    cumplimiento: 'Se cumple plenamente',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    descripcion: 'El programa cuenta con una estructura administrativa y de procesos de gestión que están al servicio de las labores de docencia, investigación y extensión.',
+    detalles: [
+      {
+        subTitle: 'Característica 41: Organización y administración',
+    calificacion: 4.70,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa académico demuestra una alta capacidad de liderazgo y gestión. Los directivos y la comunidad académica perciben un liderazgo, integridad e idoneidad por parte de los directivos del programa (4.8).',
+      },
+      {
+        subTitle: 'Característica 42: Dirección y gestión',
+        calificacion: 5.00,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La Facultad de Medicina es liderada por el Decano y cuenta con una estructura organizacional que permite el cumplimiento de las funciones misionales. La eficiencia y eficacia de los procesos administrativos es valorada positivamente (4.6). El comité de autoevaluación considera que la calificación es de 5.0.',
+      },
+      {
+        subTitle: 'Característica 43: Sistemas de comunicación e información',
+        calificacion: 4.81,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La universidad cuenta con sistemas de información robustos como SAP ERP, INCLUCES y votaciones virtuales, que garantizan la alta disponibilidad y la continuidad operacional. La calificación de 4.8 refleja que el programa cuenta con los mecanismos y sistemas necesarios para facilitar la comunicación entre toda la comunidad universitaria.',
+      },
+      {
+        subTitle: 'Característica 44: Estudiantes y capacidad institucional',
+        calificacion: 5.00,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La universidad tiene una infraestructura moderna y bien planificada. La razón estudiante/docente es de 3, lo que permite un excelente acompañamiento. La percepción sobre la suficiencia de profesores es muy alta (4.8). El comité de autoevaluación asigna una calificación perfecta de 5.0 a esta característica.',
+      },
+      {
+        subTitle: 'Característica 45: Financiación del programa académico',
+        calificacion: 4.75,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa muestra una gestión financiera eficiente, con un excedente acumulado de más de 728 millones de pesos en los últimos 5 años. Esta característica obtuvo una valoración de 4.7 por parte del comité.',
+      },
+      {
+        subTitle: 'Característica 46: Aseguramiento de la alta calidad y mejora continua',
+        calificacion: 4.75,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'El programa cuenta con una cultura de mejoramiento continuo y aplica criterios y procedimientos para la evaluación periódica. La calificación de 4.75 refleja el compromiso del programa con el aseguramiento de la alta calidad y mejora continua.',
+      },
+    ],
+  },
+  {
+    id: 12,
+    title: 'Factor 12: Recursos físicos y tecnológicos',
+    calificacion: 4.47,
+    cumplimiento: 'Se cumple en alto grado',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    descripcion: 'El programa dispone de los recursos requeridos para dar cumplimiento a su proyecto educativo, en coherencia con sus objetivos y de acuerdo con el nivel de formación y la modalidad.',
+    detalles: [
+      {
+        subTitle: 'Característica 47: Recursos de infraestructura física y tecnológica',
+        calificacion: 4.38,
+        cumplimiento: 'Se cumple en alto grado',
+        texto: 'La universidad cuenta con una infraestructura moderna y bien planificada, con tres sedes. Las aulas, laboratorios y demás espacios son adecuados para las actividades académicas. La calificación de 4.38 indica una percepción positiva, aunque el comité sugiere una socialización permanente de los atributos de esta característica.',
+      },
+      {
+        subTitle: 'Característica 48: Recursos informáticos y de comunicación',
+        calificacion: 4.56,
+        cumplimiento: 'Se cumple plenamente',
+        texto: 'La universidad cuenta con una amplia dotación de recursos informáticos y de comunicación. La pertinencia y suficiencia de estos recursos son valoradas positivamente por la comunidad académica (4.6), aunque los egresados muestran un grado de satisfacción menor. El comité de autoevaluación considera que la calificación de 4.56 es positiva.',
+      },
+    ],
+  },
+];
+
+const App = () => {
+  const [selectedFactor, setSelectedFactor] = useState(null);
+  const [activeFactorId, setActiveFactorId] = useState(null);
+  const [selectedSubTitleIndex, setSelectedSubTitleIndex] = useState(null);
+  
+  // Define los colores de la universidad
+  const cesPrimaryColor = '#15284B'; // Azul oscuro
+  
+  // Función para determinar el color de la calificación
+  const getRatingColor = (rating) => {
+    if (rating >= 4.5) return 'text-green-600';
+    if (rating >= 4.0) return 'text-yellow-500';
+    return 'text-red-600';
+  };
+  
+  // Función para manejar el clic en un factor
+  const handleFactorClick = (factor) => {
+    setSelectedFactor(factor);
+    setActiveFactorId(factor.id);
+    setSelectedSubTitleIndex(null);
+  };
+
+  // Estilos de Tailwind CSS para la interfaz
+  const cardClasses = "bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden";
+  const headerClasses = "p-4 text-center border-b border-gray-200 dark:border-gray-700";
+  const buttonClasses = (isActive) =>
+    `w-full text-left p-4 rounded-md font-medium transition-colors duration-200 flex items-center gap-4 ${
+      isActive ? 'bg-blue-800 text-white shadow-md' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+    }`;
+  
+  const renderContent = () => {
+    if (!selectedFactor) {
+      return (
+        <div className="flex items-center justify-center h-full text-center text-gray-500">
+          <p>Seleccione un factor para ver el detalle de la autoevaluación.</p>
+        </div>
+      );
+    }
+  
+    return (
+      <div className="flex flex-col h-full space-y-4">
+        <div className="flex-shrink-0">
+          <div className="flex items-center gap-4 mb-2">
+            <span className="w-6 h-6 flex items-center justify-center text-gray-500">
+              {selectedFactor.icon}
+            </span>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {selectedFactor.title}
+              </h2>
+              <p className="text-lg text-gray-700 dark:text-gray-300">
+                <span className="font-semibold">Calificación global:</span> <span className={`${getRatingColor(selectedFactor.calificacion)} font-bold`}>{selectedFactor.calificacion}</span> / 5.0
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                <span className="font-semibold">Grado de cumplimiento:</span> {selectedFactor.cumplimiento}
+              </p>
+            </div>
+          </div>
+          <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">{selectedFactor.descripcion}</p>
+        </div>
+        <div className="flex-1 overflow-y-auto pr-2">
+          <div className="space-y-4">
+            {selectedFactor.detalles.map((detalle, index) => (
+              <div
+                key={index}
+                className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                onClick={() => setSelectedSubTitleIndex(selectedSubTitleIndex === index ? null : index)}
+              >
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center justify-between">
+                  {detalle.subTitle}
+                  <span
+                    className={`transform transition-transform duration-300 ${
+                      selectedSubTitleIndex === index ? 'rotate-180' : ''
+                    }`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </span>
+                </h3>
+                {selectedSubTitleIndex === index && (
+                  <div className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                    <p><span className="font-bold">Calificación:</span> <span className={`${getRatingColor(detalle.calificacion)} font-bold`}>{detalle.calificacion}</span> / 5.0</p>
+                    <p><span className="font-bold">Cumplimiento:</span> {detalle.cumplimiento}</p>
+                    <p className="mt-2 text-gray-700 dark:text-gray-200">{detalle.texto}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 sm:p-8 font-sans">
+      {/* Encabezado del programa y la universidad */}
+      <header className="mb-8 text-center">
+        <img src={logoUrl} alt="Universidad CES Logo" className="mx-auto h-16 sm:h-20 mb-4" />
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-blue-800 dark:text-white tracking-tight">
+          Universidad CES
+        </h1>
+        <p className="mt-2 text-xl sm:text-2xl font-semibold text-gray-700 dark:text-gray-300">
+          Maestría en Administración en Salud
+        </p>
+      </header>
+
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 h-full min-h-[80vh]">
+        {/* Panel de Navegación (Factores) */}
+        <div className={`${cardClasses} md:col-span-1 h-full flex flex-col`}>
+          <div className={`${headerClasses} sticky top-0 bg-white dark:bg-gray-800 z-10`}>
+            <h1 className="text-xl font-bold text-blue-800 dark:text-white">Factores de Autoevaluación</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Maestría en Administración en Salud</p>
+          </div>
+          <div className="p-4 space-y-2 flex-1 overflow-y-auto">
+            {factores.map((factor) => (
+              <button
+                key={factor.id}
+                onClick={() => handleFactorClick(factor)}
+                className={buttonClasses(activeFactorId === factor.id)}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 flex items-center justify-center text-white-500">
+                    {factor.icon}
+                  </span>
+                  <span className="text-left">{factor.title}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Panel de Contenido Dinámico (Detalles del Factor) */}
+        <div className={`${cardClasses} md:col-span-2 h-full flex flex-col`}>
+          <div className={`${headerClasses} sticky top-0 bg-white dark:bg-gray-800 z-10`}>
+            <h2 className="text-xl font-bold text-blue-800 dark:text-white">Detalles del Factor</h2>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+            {renderContent()}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+
